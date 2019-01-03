@@ -5,10 +5,8 @@ from github_api.models import MyUser
 
 
 class SignUpForm(UserCreationForm):
-    # github_name = forms.CharField(max_length=30, required=True)
     github_password =forms.CharField(widget=forms.PasswordInput)
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
-    # name = forms.CharField(max_length=50, required=True)
 
     class Meta:
         model = MyUser

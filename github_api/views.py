@@ -1,17 +1,23 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
 
-from github_api.forms import SignUpForm
+@login_required
+def home(request):
+    return render(request, 'home.html')
+
 
 def sign_up(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data.get('username')
+            form.save()
+            username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = form.save()
+            user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('home')
     else:
-        form = SignUpForm()
+        form = UserCreationForm()
     return render(request, 'registration_form.html', {'form': form})

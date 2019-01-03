@@ -16,15 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from github_api import views
-# from django.contrib.auth.views import (
-#     login, logout, password_reset, password_reset_done, password_reset_confirm,
-#     password_reset_complete
-# )
-
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     # url(r'^login/$', login, {'template_name': 'accounts/login.html'}, name='login'),
-    # url(r'^logout/$', logout, {'template_name': 'accounts/logout.html'}, name='logout'),
+    url(r'^$', views.home, name='home'),
+    url(r'^login/$', LoginView.as_view(), {'template_name': 'login.html'}, name='login'),
+    url(r'^logout/$', LogoutView.as_view(), {'next_page': 'login'}, name='logout'),
     url(r'^register/$', views.sign_up, name='register'),
     url('admin/', admin.site.urls)
 ]
