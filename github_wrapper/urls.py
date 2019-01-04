@@ -23,8 +23,11 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
     # url(r'^login/$', login, {'template_name': 'accounts/login.html'}, name='login'),
     url(r'^$', views.home, name='home'),
+    url(r'home/repos', views.get_repos, name='repos'),
+
     url(r'^login/$', LoginView.as_view(), {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', LogoutView.as_view(), {'next_page': 'login'}, name='logout'),
     url(r'^register/$', views.sign_up, name='register'),
-    url('admin/', admin.site.urls)
+    url('admin/', admin.site.urls),
+    url('add_new_repo', views.add_new_repo, name='add_new_repo')
 ]
