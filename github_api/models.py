@@ -1,10 +1,13 @@
 
 from django.db import models
-from django.contrib.auth.models import  AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import User
+
 
 class Repos(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
+    user =models.ManyToManyField(User)
+
 
 
 class Issuses(models.Model):
