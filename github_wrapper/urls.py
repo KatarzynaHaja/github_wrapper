@@ -30,5 +30,7 @@ urlpatterns = [
     url(r'^register/$', views.sign_up, name='register'),
     url('admin/', admin.site.urls),
     url('add_new_repo', views.add_new_repo, name='add_new_repo'),
-    url('add_new_issue', views.add_new_issue, name='add_new_issue')
+    # url('add_new_issue', views.add_new_issue, name='add_new_issue'),
+    url(r'repos/home/(?P<pk>\d+)/add_issue/', views.add_new_issue, name='add_new_issue'),
+    url(r'(?P<pk>\d+)/', views.get_repo_details, name='details')
 ]

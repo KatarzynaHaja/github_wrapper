@@ -3,15 +3,16 @@
 {% block content %}
      {% if user.is_authenticated %}
         <p>Welcome {{ user.username }} !!!</p>
+         <button class="btn"  onclick="location.href = 'add_new_repo.html';"><i class="far fa-plus-square"></i></button>
 
         <div>Name Repo</div>
         {% for item in object_list %}
             <div>
-                {{ item.name }}
+            <h1><a href="{% url 'details' pk=item.pk %}">{{ item.name }}</a></h1>
                 <div>
-                <i class="fas fa-sync-alt"></i>
-                <i class="far fa-plus-square"></i>
-                <i class="fas fa-code-branch"></i>
+                    <button class="btn"><i class="fas fa-sync-alt"></i></button>
+                    <button class="btn"  onclick="location.href='{% url 'add_new_issue' pk=item.pk %}';"><i class="far fa-plus-square"></i></button>
+                    <button class="btn"><i class="fas fa-code-branch"></i></button>
                 </div>
 
             </div>

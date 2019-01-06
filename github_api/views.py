@@ -1,12 +1,12 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView
 
 from github_api.github_api import  GithubApi
 from .forms import ReposForm
-from .models import Repos
+from .models import Repos, Branches
 from .forms import IssueForm
 
 
@@ -51,17 +51,27 @@ def add_new_repo(request):
     return render(request, 'add_new_repo.html', {'form': form})
 
 
-def add_new_issue(request):
+def add_new_issue(request, pk):
+    repo = get_object_or_404(Repos, pk=pk)
     if request.method == "POST":
         form = IssueForm(request.POST)
         if form.is_valid():
+            g = GithubApi("KatarzynaHaja", 'Studia123')
+            g.create_new_issue(form.cleaned_data.get('title'),
+                               form.cleaned_data.get('body'),
+                               form.cleaned_data.get('label'),
+                               form.cleaned_data.get('milestone'),
+                               form.cleaned_data.get('assignee'))
             issue = form.save(commit=False)
             issue.title = form.cleaned_data.get('title')
             issue.body = form.cleaned_data.get('body')
             issue.label = form.cleaned_data.get('label')
             issue.milestone = form.cleaned_data.get('milestone')
             issue.assignee = form.cleaned_data.get('assignee')
+            issue.repo = repo
             issue.save()
+
+
     else:
         form = IssueForm()
     return render(request, 'add_issue.html', {'form': form})
@@ -79,3 +89,9 @@ class HomeView(ListView):
     #     query_results = Repos.objects.filter(user=kwargs.user)
     #     pass
     #     return render(kwargs, 'home.html', {'query_results': query_results})
+
+
+def get_repo_details(request, pk):
+    repo = get_object_or_404(Repos, pk=pk)
+    pass
+    return render(request, 'repo_details.html', {'repo': repo})

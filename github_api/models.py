@@ -9,7 +9,6 @@ class Repos(models.Model):
     user =models.ManyToManyField(User)
 
 
-
 class Issuses(models.Model):
     id = models.AutoField(primary_key=True)
     repo = models.ForeignKey(Repos, on_delete=models.CASCADE)

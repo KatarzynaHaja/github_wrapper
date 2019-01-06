@@ -1,4 +1,6 @@
+from django.shortcuts import get_object_or_404
 from github import Github
+from .models import Repos, Branches
 
 
 class GithubApi:
@@ -18,8 +20,22 @@ class GithubApi:
         return self.get_repo_by_name(repo_name).get_labels()
 
     def get_names_of_branches(self, repo_name):
-        return [branch.name for branch in self.get_repo_by_name(repo_name)]
+        return [branch.name for branch in self.get_repo_by_name(repo_name).get_branches()]
+
+    def create_new_issue(self, title, body=None, label=None, milestone=None, assignee=None):
+        repo = self.get_repo_by_name("KatarzynaHaja/Test")
+        if milestone:
+            milestone = repo.create_milestone(milestone)
+        repo.create_issue(title=title, body=body, labels=[label], milestone=milestone)
 
 
 
+g = GithubApi("KatarzynaHaja", "Studia123")
+branches = g.get_names_of_branches("KatarzynaHaja/Test")
+
+
+repo = get_object_or_404(Repos, pk=7)
+for i in branches:
+    b = Branches(name=i, repo=repo)
+    b.save()
 
