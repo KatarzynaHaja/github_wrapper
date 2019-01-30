@@ -1,46 +1,59 @@
 {% extends 'base.html' %}
 
 {% block content %}
-     {% if user.is_authenticated %}
-        <p>Welcome {{ user.username }} !!!</p>
-         <button class="btn"  onclick="location.href = 'add_new_repo.html';"><i class="far fa-plus-square"></i></button>
+    {% if user.is_authenticated %}
+        <div style="text-align:right">
+            <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
+                    onclick="location.href = 'add_new_repo.html';">
+                Add repo
+            </button>
+        </div>
+        <ul class="list-group">
+            {% for item in object_list %}
+                <li class="list-group-item"
+                    style="padding-top:25px; padding-bottom:25px;margin:5px;background: #f7f7f7">
+                    <div class="repo_name" onclick="location.href='{% url 'details' pk=item.pk %}'">
+                        {{ item.name }}
+                    </div>
+                    <div>
+                        <button class="btn" data-toggle="tooltip" data-placement="bottom" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="btn" onclick="location.href='{% url 'add_new_issue' pk=item.pk %}';"
+                                data-toggle="tooltip" data-placement="bottom" title="New issue">
+                            <i class="far fa-plus-square"></i></button>
+                        <button class="btn" data-toggle="tooltip" data-placement="bottom" title="Branches">
+                            <i class="fas fa-code-branch"></i>
+                        </button>
+                    </div>
 
-        <div>Name Repo</div>
-        {% for item in object_list %}
-            <div>
-            <h1><a href="{% url 'details' pk=item.pk %}">{{ item.name }}</a></h1>
-                <div>
-                    <button class="btn"><i class="fas fa-sync-alt"></i></button>
-                    <button class="btn"  onclick="location.href='{% url 'add_new_issue' pk=item.pk %}';"><i class="far fa-plus-square"></i></button>
-                    <button class="btn"><i class="fas fa-code-branch"></i></button>
-                </div>
-
-            </div>
-        {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
     {% else %}
-         {% url 'signup' %}
+        {% url 'signup' %}
     {% endif %}
 
     {% if is_paginated %}
-  <ul class="pagination">
-    {% if page_obj.has_previous %}
-      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&laquo;</span></li>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
     {% endif %}
-    {% for i in paginator.page_range %}
-      {% if page_obj.number == i %}
-        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if page_obj.has_next %}
-      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled"><span>&raquo;</span></li>
-    {% endif %}
-  </ul>
-{% endif %}
 
 {% endblock %}
