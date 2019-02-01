@@ -2,12 +2,28 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <div style="text-align:right">
-            <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
-                    onclick="location.href = 'add_new_repo.html';">
-                Add repo
-            </button>
-        </div>
+
+        {% if not access %}
+            <div class="alert alert-danger" role="alert">
+                Add your personal Github token . It allows you to use all functionalities.
+            </div>
+
+             <div style="text-align:center">
+                <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
+                        onclick="location.href = 'add_personal_token.html';">
+                    Add your personal token
+                </button>
+            </div>
+
+        {% else %}
+            <div style="text-align:right">
+                <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
+                        onclick="location.href = 'add_new_repo.html';">
+                    Add repo
+                </button>
+            </div>
+
+        {% endif %}
         <ul class="list-group">
             {% for item in object_list %}
                 <li class="list-group-item"

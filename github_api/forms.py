@@ -1,16 +1,25 @@
 from django import forms
-from .models import Repos
-from .models import Issuses
+from .models import Repo
+from .models import Issue
+from .models import GitAuthentication
 
-class ReposForm(forms.ModelForm):
+class RepoForm(forms.ModelForm):
 
     class Meta:
-        model = Repos
+        model = Repo
         fields = ('name',)
 
 
 class IssueForm(forms.ModelForm):
+    milestone = forms.CharField(required=False)
 
     class Meta:
-        model = Issuses
-        fields = ('title', 'body', 'label', 'milestone','assignee')
+        model = Issue
+        fields = ('title', 'body', 'label', 'milestone')
+
+
+class PersonalTokenForm(forms.ModelForm):
+
+    class Meta:
+        model = GitAuthentication
+        fields = ('access_token',)

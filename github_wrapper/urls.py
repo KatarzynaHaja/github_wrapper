@@ -23,14 +23,15 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
     # url(r'^login/$', login, {'template_name': 'accounts/login.html'}, name='login'),
     url(r'^$', views.HomeView.as_view(), name='home'),
-    url(r'home/repos', views.HomeView.as_view(), name='repos'),
+    url(r'home/Repo', views.HomeView.as_view(), name='Repo'),
 
-    url(r'^login/$', LoginView.as_view(), {'template_name': 'login.html', 'next_page':'repos'}, name='login'),
+    url(r'^login/$', LoginView.as_view(), {'template_name': 'login.html', 'next_page':'Repo'}, name='login'),
     url(r'^logout/$', LogoutView.as_view(), {'next_page': 'login'}, name='logout'),
     url(r'^register/$', views.sign_up, name='register'),
     url('admin/', admin.site.urls),
     url('add_new_repo', views.add_new_repo, name='add_new_repo'),
     # url('add_new_issue', views.add_new_issue, name='add_new_issue'),
-    url(r'repos/home/(?P<pk>\d+)/add_issue/', views.add_new_issue, name='add_new_issue'),
-    url(r'(?P<pk>\d+)/', views.get_repo_details, name='details')
+    url(r'Repo/home/(?P<pk>\d+)/add_issue/', views.add_new_issue, name='add_new_issue'),
+    url(r'(?P<pk>\d+)/', views.get_repo_details, name='details'),
+    url(r'add_personal_token', views.add_personal_token , name='add_personal_token')
 ]
