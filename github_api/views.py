@@ -62,6 +62,9 @@ def add_new_repo(request):
             except:
                 error = "This repo doesn't exist"
                 return render(request, 'add_new_repo.html', {'form': form, 'error': error})
+            if Repo.objects.filter(name=form.cleaned_data.get('name')):
+                error = 'This repo has already been in your favourites'
+                return render(request, 'add_new_repo.html', {'form': form, 'error': error})
 
             repo = form.save(commit=False)
             repo.name = form.cleaned_data.get('name')
