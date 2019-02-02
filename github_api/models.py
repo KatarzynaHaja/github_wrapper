@@ -18,11 +18,11 @@ class GitAuthentication(models.Model):
 class Issue(models.Model):
     id = models.AutoField(primary_key=True)
     repo = models.ForeignKey(Repo, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    body = models.TextField(max_length=500)
-    label = models.CharField(max_length=100)
-    milestone = models.CharField(max_length=100, null=True)
-    assignee = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)
+    body = models.TextField(max_length=500, null=True)
+    label = models.CharField(max_length=200, null=True)
+    milestone = models.CharField(max_length=200, null=True)
+    assignee = models.CharField(max_length=200, null=True)
     number = models.IntegerField(null=True)
 
 

@@ -2,8 +2,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Sign up</h2>
-    {% if error %}
+    <h2>Update your personal token</h2>
+    {% if message %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+     {% if error %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
         </div>
@@ -11,6 +16,6 @@
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="btn btn-success" id="sign_up_button">Sign up</button>
+        <button type="submit" class="btn btn-success">Update</button>
     </form>
 {% endblock %}

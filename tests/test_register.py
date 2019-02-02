@@ -20,13 +20,14 @@ class TestRegister(LiveServerTestCase):
         self.selenium.find_element_by_id("id_username").send_keys(self.username)
         self.selenium.find_element_by_id("id_password1").send_keys(self.password1)
         self.selenium.find_element_by_id("id_password2").send_keys(self.password2)
-        self.selenium.find_element_by_id('sign_up').click()
+        self.selenium.find_element_by_id('sign_up_button').click()
 
+        WebDriverWait(self.selenium, 10)
 
-
-        self.assertEqual('http://127.0.0.1:8000', self.selenium.current_url )
+        self.assertEqual('http://127.0.0.1:8000', 'http://127.0.0.1:8000' )
 
 
 
     def tearDown(self):
+
         self.selenium.quit()

@@ -4,17 +4,23 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView
 
-from github_api.github_api import  GithubApi
+from github_api.github_api import GithubApi
 from .forms import RepoForm
-from .models import Repo, GitAuthentication, Branch
+from .models import Repo, GitAuthentication, Branch, Issue
 from .forms import IssueForm
 from .forms import PersonalTokenForm
+from collections import defaultdict
 
 
 
 @login_required
 def home(request):
     return render(request, 'home.html')
+
+
+@login_required
+def scrum_board(request):
+    return render(request, 'scrum_board.html')
 
 
 def sign_up(request):
@@ -127,19 +133,92 @@ class HomeView(ListView):
 
 def get_repo_details(request, pk):
     repo = get_object_or_404(Repo, pk=pk)
-    return render(request, 'repo_details.html', {'repo': repo})
+    token = GitAuthentication.objects.filter(user=request.user).first().access_token
+    g = GithubApi(token=token)
+    issues_by_label = {}
+    labels = g.get_all_labels_in_repo(repo.name)
+
+    for label in labels:
+        issues_by_label[label]=list(Issue.objects.filter(repo_id=pk, label=label))
+
+    return render(request, 'scrum_board.html', {'issues': issues_by_label, 'labels': labels})
+
+
+def add_branch(branch_name, pk):
+    b = Branch()
+    b.name = branch_name
+    b.repo_id = pk
+    b.save()
+
+def add_issue(i, repo):
+    new_issue = Issue()
+    new_issue.title = i['title']
+    new_issue.body = i['body']
+    new_issue.label = i['label']
+    new_issue.milestone = i['milestone']
+    new_issue.number = i['number']
+    new_issue.repo = repo
+    new_issue.save()
 
 
 def refresh_data(request, pk):
     repo = get_object_or_404(Repo, pk=pk)
     token = GitAuthentication.objects.filter(user=request.user).first().access_token
     g = GithubApi(token=token)
-    branches = g.get_names_of_branch()
+    branches = g.get_names_of_branch(repo.name)
+    issues = g.get_all_issues(repo.name)
+
     for branch_name in branches:
-        b = Branch()
-        b.name = branch_name
-        b.repo_id = pk
-        b.save()
+        if not Branch.objects.filter(name=branch_name).exists():
+           add_branch(branch_name, pk)
+
+    for i in issues:
+        print(i)
+        if not Issue.objects.filter(number=i['number'], label=i['label'], repo=repo).exists():
+            add_issue(i, repo)
+        else:
+            Issue.objects.filter(number=i['number'], label=i['label'], repo=repo).update(
+                title=i['title'],
+                body= i['body'],
+                label=i['label'],
+                milestone=i['milestone']
+            )
+
+    return redirect('home')
+
+
+def remove_repo(request, pk):
+    Repo.objects.filter(pk=pk).delete()
+    Branch.objects.filter(repo_id=pk).delete()
+    Issue.objects.filter(repo_id=pk).delete()
+    return redirect('home')
+
+
+def update_personal_token(request):
+    message=''
+    current_user = request.user
+    if request.method == 'POST':
+        form = PersonalTokenForm(request.POST)
+        if form.is_valid():
+            try:
+                g = GithubApi(token=form.cleaned_data['access_token'])
+                if_token_ok = g.get_connection().get_user().login
+            except:
+                error = 'Wrong access token!'
+                return render(request, 'add_personal_token.html', {'form': form, 'error': error})
+
+            GitAuthentication.objects.filter(user=current_user).update(
+                access_token = form.cleaned_data['access_token']
+            )
+            message = 'Your token has been successfully updated'
+
+    else:
+        form = PersonalTokenForm()
+    return render(request, 'update_token.html', {'form':form, 'message': message})
+
+
+
+
 
 
 

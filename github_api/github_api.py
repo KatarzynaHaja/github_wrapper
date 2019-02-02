@@ -13,10 +13,25 @@ class GithubApi:
         return self.connection.get_repo(repo_name)
 
     def get_all_issues(self, repo_name):
-        return self.get_repo_by_name(repo_name).get_issues()
+        issue_from_repo = self.get_repo_by_name(repo_name).get_issues()
+        issues_list = []
+        for i in issue_from_repo:
+            print(i.labels)
+            if len(i.labels) > 0:
+                for label in list(i.labels):
+                    issues_list.append({'title': i.title, 'body': i.body, 'label': label.name if label is not None else '',
+                                        'milestone': i.milestone.title if i.milestone is not None else '',
+                                        'assignee': i.assignee, 'number': i.number})
+            else:
+                issues_list.append(
+                    {'title': i.title, 'body': i.body, 'label': '',
+                     'milestone': i.milestone.title if i.milestone is not None else '', 'assignee': i.assignee,
+                     'number': i.number})
+
+        return issues_list
 
     def get_all_labels_in_repo(self, repo_name):
-        return self.get_repo_by_name(repo_name).get_labels()
+        return [label.name for label in self.get_repo_by_name(repo_name).get_labels()]
 
     def get_names_of_branch(self, repo_name):
         return [branch.name for branch in self.get_repo_by_name(repo_name).get_branches()]
@@ -35,11 +50,11 @@ class GithubApi:
         repo.create_issue(title=title, body=body, labels=[label], milestone=milestone)
 
 
+from collections import defaultdict
 
-# g = GithubApi('aa16de1b380f0f862a65f19feb042787090aad61')
-# print(g.get_connection().get_user().login)
-# repo = g.get_repo_by_name("dupa, dupa")
-# print(list(repo.get_milestones()))
+
+
+# # print(list(repo.get_milestones()))
 # print([milestone.title for milestone in repo.get_milestones()])
 # repo.create_milestone('New')
 # d = repo.get_issues()

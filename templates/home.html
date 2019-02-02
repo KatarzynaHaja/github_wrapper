@@ -32,14 +32,21 @@
                         {{ item.name }}
                     </div>
                     <div>
-                        <button class="btn" data-toggle="tooltip" data-placement="bottom" title="Refresh">
+                        <button class="btn" onclick="location.href ='{% url 'refresh_data' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Refresh">
                             <i class="fas fa-sync-alt"></i>
                         </button>
+
                         <button class="btn" onclick="location.href='{% url 'add_new_issue' pk=item.pk %}';"
                                 data-toggle="tooltip" data-placement="bottom" title="New issue">
-                            <i class="far fa-plus-square"></i></button>
+                            <i class="far fa-plus-square"></i>
+                        </button>
+
                         <button class="btn" data-toggle="tooltip" data-placement="bottom" title="Branches">
                             <i class="fas fa-code-branch"></i>
+                        </button>
+
+                        <button class="btn" onclick="location.href ='{% url 'remove_repo' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Remove">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
 
@@ -71,5 +78,7 @@
             {% endif %}
         </ul>
     {% endif %}
+
+
 
 {% endblock %}
