@@ -16,7 +16,6 @@ class GithubApi:
         issue_from_repo = self.get_repo_by_name(repo_name).get_issues()
         issues_list = []
         for i in issue_from_repo:
-            print(i.labels)
             if len(i.labels) > 0:
                 for label in list(i.labels):
                     issues_list.append({'title': i.title, 'body': i.body, 'label': label.name if label is not None else '',

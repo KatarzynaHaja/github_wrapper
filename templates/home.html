@@ -4,7 +4,7 @@
     {% if user.is_authenticated %}
 
         {% if not access %}
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger" id='access_token_alert' role="alert">
                 Add your personal Github token . It allows you to use all functionalities.
             </div>
 
@@ -28,7 +28,7 @@
             {% for item in object_list %}
                 <li class="list-group-item"
                     style="padding-top:25px; padding-bottom:25px;margin:5px;background: #f7f7f7">
-                    <div class="repo_name" onclick="location.href='{% url 'details' pk=item.pk %}'">
+                    <div class="repo_name" onclick="location.href='{% url 'scrum_board' pk=item.pk %}'">
                         {{ item.name }}
                     </div>
                     <div>

@@ -90,65 +90,7 @@ var App = function() {
     }
   }
 
-  function createTask() {
-    var source = $("#task-card-template").html();
-    var template = Handlebars.compile(source);
 
-    $('#add-task').on('click', function(e) {
-      e.preventDefault();
-      $('#add-task-modal').removeClass('hide');
-
-      $('#add-task-modal').find('form').on('submit', function(e) {
-        e.preventDefault();
-        var obj = {};
-        var params = $(this).serialize();
-        var splitParams = params.split('&');
-
-        for(var i = 0, l = splitParams.length; i < l; i++) {
-          var keyVal = splitParams[i].split('=');
-          obj[keyVal[0]] = unescape(keyVal[1]);
-        }
-
-        // TODO: Add validations
-        if(obj.description === '' || obj.title === '') {
-          return;
-        }
-
-        var iid = LocalStorage.get('taskCounter');
-        obj.id = ++iid;
-        obj.status = 'pending';
-        LocalStorage.set('task-' + obj.id, JSON.stringify(obj));
-        LocalStorage.set('taskCounter', iid);
-
-        var newCard = template([obj]);
-        $('#dashboard #' + obj.status).append(newCard);
-        draggable();
-
-        $('.close-modal').trigger('click');
-
-        //Clear form fields after submit
-        $(this).find('input[type=text], textarea').val('');
-      });
-
-    });
-  }
-
-  function editTask() {
-    $(document).on('dblclick', '.card-details p', function(e) {
-      e.stopPropagation();
-      $(this).attr('contenteditable','true').parents('.card').addClass('edit-mode');
-    });
-
-    $(document).on('input', '.card p', function() {
-      var taskId = $(this).parents('.card').data('task-id');
-      var fieldToEdit = $(this).data('field');
-      var getTaskData = JSON.parse(LocalStorage.get('task-' + taskId));
-
-      getTaskData[fieldToEdit] = $(this).text();
-
-      LocalStorage.set('task-' + taskId, JSON.stringify(getTaskData));
-    });
-  }
 
   function exitEditMode() {
     $(document).on('dblclick', function(e) {

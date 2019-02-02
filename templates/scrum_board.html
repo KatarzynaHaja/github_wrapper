@@ -1,112 +1,140 @@
-<!-- Place this tag in your head or just before your close body tag. -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
 
-<div class="wrapper">
-  <header class="clear">
-    <ul>
-      <li>Rejected</li>
-      <li>Pending</li>
-      <li>Development</li>
-      <li>Testing</li>
-      <li>Production</li>
-    </ul>
-  </header>
 
-  <section id="dashboard" class="dashboard clear">
-    <div id="rejected" class="rejected"></div>
-    <div id="pending" class="pending"></div>
-    <div id="development" class="development"></div>
-    <div id="testing" class="testing"></div>
-    <div id="production" class="production"></div>
-  </section>
 
-  <footer>
-    <ul>
-      <li class="branding">Scrum <span>Board</span> <sup>Beta</sup></li>
-    </ul>
+{% extends 'base.html' %}
 
-{#    <ul class="controls">#}
-{#      <li>#}
-{#        <a target="_blank" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Scrum%20Board%2C%20Simple%20Task%20Manager%20App.%20Powered%20by%20JavaScript.%20Checkout%20now%20on%20CodePen%20https%3A%2F%2Fgoo.gl%2FtTkZGO">#}
-{#Tweet</a>#}
-{#      </li>#}
-{#      <li>#}
-{#        <a class="github-button" href="https://github.com/i-break-codes/scrum-board" data-icon="octicon-star" data-count-href="/i-break-codes/scrum-board/stargazers" data-count-api="/repos/i-break-codes/scrum-board#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star i-break-codes/scrum-board on GitHub">Star</a>#}
-{#      </li>#}
-{#      <li>#}
-{#        <a class="github-button" href="https://github.com/i-break-codes/scrum-board/archive/master.zip" data-icon="octicon-cloud-download" aria-label="Download i-break-codes/scrum-board on GitHub">Download</a>#}
-{#      </li>#}
-{#      <li data-tooltip="Drag A Task Here To Delete">#}
-{#        <a href="#" class="remove" id="remove">#}
-{#          <img src="http://imgh.us/bin_1.svg" alt="">#}
-{#        </a>#}
-{#      </li>#}
-{#      <li data-tooltip="Add Task">#}
-{#        <a href="#" id="add-task" class="add-task">#}
-{#          <img src="http://imgh.us/plus_13.svg" alt="">#}
-{#        </a>#}
-{#      </li>#}
-{#      <li data-tooltip="Github" class="github-ref">#}
-{#        <a href="https://github.com/i-break-codes/scrum-board" target="_blank">#}
-{#          <img src="http://imgh.us/github_6.svg" alt="">#}
-{#        </a>#}
-{#      </li>#}
-{#    </ul>#}
-  </footer>
-</div>
+{% block my_styles %}
 
-{#<div id="removed-task-notification" class="removed-task-notification hide"></div>#}
+    <style>
+    .mt-2.container.p-2 {display:none}
 
-{#<div class="modal hide" id="add-task-modal">#}
-{#  <div class="modal-wrapper">#}
-{#    <form action="index.html" method="post" class="add-task-form" name="add_task">#}
-{#      <span class="close-modal">X</span>#}
-{##}
-{#      <h3>Add a new Task</h3>#}
-{##}
-{#      <ul>#}
-{#        <li>#}
-{#          <input type="text" name="title" placeholder="Title" autofocus>#}
-{#        </li>#}
-{#        <li>#}
-{#          <textarea name="description" placeholder="Description"></textarea>#}
-{#        </li>#}
-{#        <li>#}
-{#          <input type="text" name="remote_url" placeholder="Remote Task URL">#}
-{#        </li>#}
-{#        <li>#}
-{#          <input type="text" name="assigned_to" placeholder="Assigned To">#}
-{#        </li>#}
-{#        <li>#}
-{#          <input type="submit" name="create_task" value="Create Task">#}
-{#        </li>#}
-{#      </ul>#}
-{#    </form>#}
-{#  </div>#}
 
-  <div class="create-task-branding">
-    Scrum <span>Board</span> <sup>Beta</sup>
-  </div>
-</div>
+body {
+  font-weight: 300;
+  font-family: Arial;
+  font-size: 20px;
+}
 
-<div class="hide" id="tips">
-  Double click on the task text to edit it <br> <span>(Task titles are not editable for now)</span>
-</div>
+.clear {
+    padding : 10px;
+    text-align:center;
+    border-bottom:1px solid black;
+}
 
-<script id="task-card-template" type="text/x-handlebars-template">
-  {{#each this}}
-  <div class="card" data-task-id="{{id}}">
-    <a href="#" class="expand-card"></a>
-    <h5>{{title}}</h5>
-    <div class="card-details">
-      <p data-field="description">{{description}}</p>
-      <p data-field="remote_url">
-        {{#checkIfEmptyRemoteURL remote_url}}{{/checkIfEmptyRemoteURL}}
-      </p>
-      <p data-field="assigned_to">
-        {{#checkIfEmptyAssigned assigned_to}}{{/checkIfEmptyAssigned}}
-      </p>
+.card {
+  background-color: lightgrey;
+  min-height: 50px;
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, .1);
+  z-index: 2;
+}
+.card:before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 1px;
+}
+
+.card h5 {
+  font-size: 13px;
+  line-height: 50px;
+  padding-left: 10px;
+  font-weight: 300;
+}
+.card.edit-mode h5 {
+  position: relative;
+}
+.card.edit-mode h5:after {
+  top: 50%;
+  margin-left: 5px;
+  margin-top: 1px;
+  transform: translateY(-50%);
+  position: absolute;
+  font-size: 9px;
+  content: "(Edit Mode Enabled)";
+}
+
+.card.expanded {
+  overflow: auto !important;
+  height: auto !important;
+}
+.card-details {
+  padding: 10px;
+  font-size: 12px;
+  word-wrap: break-word;
+  padding-top: 0;
+}
+.card-details p {
+  margin-bottom: 10px;
+  position: relative;
+}
+.card-details p:before {
+  position: absolute;
+  left: 0;
+}
+.card-details p:nth-child(1) {
+  padding-left: 67px;
+}
+.card-details p:nth-child(1):before {
+  content: "Description : ";
+}
+.card-details p:nth-child(2) {
+  padding-left: 72px;
+}
+.card-details p:nth-child(2):before {
+  content: "Remote URL : ";
+}
+.card-details p:nth-child(3) {
+  padding-left: 70px;
+}
+.card-details p:nth-child(3):before {
+  content: "Assigned To : ";
+}
+.card-details a {
+  border-bottom: 1px dotted #fff;
+}
+.card-details a:hover {
+  border-bottom-style: solid;
+}
+.dragged-over {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+
+
+    </style>
+{% endblock %}
+
+{% block content1 %}
+    <h2 style="text-align: center; padding:20px"> Scrum board</h2>
+    <div class="row" style="padding:10px">
+
+      {% for key, issue in issues.items %}
+          <div class="col-sm p-0" style="border-left:1px solid black;">
+            <div class="clear">
+                {{ key }}
+            </div>
+          {%  for i in issue %}
+              <div class="card" onclick="location.href ='{% url 'issue_details' id=i.id %}'"  data-task-id="{{i.id}}">
+                <h5>{{i.title}}</h5>
+                  <a href="#"
+                        class="issue-link"
+                        data-toggle="modal"
+                        data-target="#issue-modal"
+                        data-img="{{ building.img.url }}"
+                        data-description="{{ building.short_description }}"
+                        data-name="{{ building.name }}">
+                        {{ building.name }}
+</a>
+{#                <div class="card-details">#}
+{#                  <p data-field="description">{{i.body}}</p>#}
+{#                </div>#}
+              </div>
+              {% endfor %}
+          </div>
+      {% endfor %}
     </div>
-  </div>
-  {{/each}}
-</script>
+{% endblock %}

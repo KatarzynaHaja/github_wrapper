@@ -19,8 +19,17 @@ def home(request):
 
 
 @login_required
-def scrum_board(request):
-    return render(request, 'scrum_board.html')
+def scrum_board(request,pk):
+    repo = get_object_or_404(Repo, pk=pk)
+    token = GitAuthentication.objects.filter(user=request.user).first().access_token
+    g = GithubApi(token=token)
+    issues_by_label = {}
+    labels = g.get_all_labels_in_repo(repo.name)
+
+    for label in labels:
+        issues_by_label[label] = list(Issue.objects.filter(repo_id=pk, label=label).all())
+
+    return render(request, 'scrum_board.html', {'issues': issues_by_label, 'labels': labels})
 
 
 def sign_up(request):
@@ -98,7 +107,7 @@ def add_personal_token(request):
         if form.is_valid():
             try:
                 g = GithubApi(token=form.cleaned_data['access_token'])
-                if_token_ok = g.get_connection().get_user().login
+                g.get_connection().get_user().login
             except:
                 error = 'Wrong access token!'
                 return render(request, 'add_personal_token.html', {'form': form, 'error': error})
@@ -131,17 +140,9 @@ class HomeView(ListView):
         return Repo.objects.filter(user=self.request.user)
 
 
-def get_repo_details(request, pk):
-    repo = get_object_or_404(Repo, pk=pk)
-    token = GitAuthentication.objects.filter(user=request.user).first().access_token
-    g = GithubApi(token=token)
-    issues_by_label = {}
-    labels = g.get_all_labels_in_repo(repo.name)
-
-    for label in labels:
-        issues_by_label[label]=list(Issue.objects.filter(repo_id=pk, label=label))
-
-    return render(request, 'scrum_board.html', {'issues': issues_by_label, 'labels': labels})
+def get_issue_details(request,id):
+    issue = Issue.objects.filter(id=id).first()
+    return render(request, 'issue_details.html', {'issue': issue})
 
 
 def add_branch(branch_name, pk):
