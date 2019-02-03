@@ -16,12 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url
 from github_api import views
-from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
-    # url(r'^login/$', login, {'template_name': 'accounts/login.html'}, name='login'),
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'home', views.HomeView.as_view(), name='Repo'),
     url(r'^login/$', LoginView.as_view(), {'template_name': 'login.html', 'next_page':'Repo'}, name='login'),
@@ -29,13 +27,12 @@ urlpatterns = [
     url(r'^register/$', views.sign_up, name='register'),
     url('admin/', admin.site.urls),
     url('add_new_repo', views.add_new_repo, name='add_new_repo'),
-    url(r'Repo/(?P<pk>\d+)/scrum_board/', views.scrum_board, name='scrum_board'),
-    url(r'Repo/home/(?P<pk>\d+)/add_issue/', views.add_new_issue, name='add_new_issue'),
+    url(r'repo/(?P<pk>\d+)/scrum_board/', views.scrum_board, name='scrum_board'),
+    url(r'repo/(?P<pk>\d+)/add_issue/', views.add_new_issue, name='add_new_issue'),
     url(r'scrum_board/(?P<id>\d+)/details/', views.get_issue_details, name='issue_details'),
     url(r'add_personal_token', views.add_personal_token , name='add_personal_token'),
     url(r'refresh_data/(?P<pk>\d+)/', views.refresh_data, name='refresh_data'),
     url(r'remove_repo/(?P<pk>\d+)/', views.remove_repo, name='remove_repo'),
-
     url(r'update_token', views.update_personal_token, name='update_token')
 
 ]

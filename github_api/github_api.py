@@ -1,4 +1,3 @@
-
 from github import Github
 
 
@@ -18,9 +17,10 @@ class GithubApi:
         for i in issue_from_repo:
             if len(i.labels) > 0:
                 for label in list(i.labels):
-                    issues_list.append({'title': i.title, 'body': i.body, 'label': label.name if label is not None else '',
-                                        'milestone': i.milestone.title if i.milestone is not None else '',
-                                        'assignee': i.assignee, 'number': i.number})
+                    issues_list.append(
+                        {'title': i.title, 'body': i.body, 'label': label.name if label is not None else '',
+                         'milestone': i.milestone.title if i.milestone is not None else '',
+                         'assignee': i.assignee, 'number': i.number})
             else:
                 issues_list.append(
                     {'title': i.title, 'body': i.body, 'label': '',
@@ -44,22 +44,7 @@ class GithubApi:
             repo.create_issue(title=title, body=body, labels=[label])
         elif milestone and milestone not in current_milestones_name:
             milestone = repo.create_milestone(milestone)
+            repo.create_issue(title=title, body=body, labels=[label], milestone=milestone)
         elif milestone is not None:
             milestone = current_milestones[current_milestones_name.index(milestone)]
-        repo.create_issue(title=title, body=body, labels=[label], milestone=milestone)
-
-
-from collections import defaultdict
-
-
-
-# # print(list(repo.get_milestones()))
-# print([milestone.title for milestone in repo.get_milestones()])
-# repo.create_milestone('New')
-# d = repo.get_issues()
-# for i in d:
-#     print(i)
-
-
-
-
+            repo.create_issue(title=title, body=body, labels=[label], milestone=milestone)

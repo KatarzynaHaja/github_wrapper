@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
+
 class TestLogIn(LiveServerTestCase):
 
     def setUp(self):
@@ -41,8 +42,6 @@ class TestLogIn(LiveServerTestCase):
                 EC.presence_of_element_located((By.CLASS_NAME, "alert.alert-block.alert-danger")))
         finally:
             self.selenium.quit()
-
-
 
     def tearDown(self):
         self.selenium.quit()

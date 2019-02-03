@@ -16,7 +16,6 @@ class TestRegister(LiveServerTestCase):
         self.username = 'user1'
         super(TestRegister, self).setUp()
 
-
     def test_correct_registration(self):
         self.username = 'user2'
         self.password1 = 'Admin#99'
@@ -55,7 +54,7 @@ class TestRegister(LiveServerTestCase):
         self.username = 'user2'
         self.password1 = 'Admin#99'
         self.password2 = 'Admin#99'
-        self.selenium.get(self.live_server_url+'/register')
+        self.selenium.get(self.live_server_url + '/register')
         self.selenium.find_element_by_id("id_username").send_keys(self.username)
         self.selenium.find_element_by_id("id_password1").send_keys(self.password1)
         self.selenium.find_element_by_id("id_password2").send_keys(self.password2)
@@ -66,7 +65,6 @@ class TestRegister(LiveServerTestCase):
                 EC.presence_of_element_located((By.ID, "error_1_id_username")))
         finally:
             self.selenium.quit()
-
 
     def tearDown(self):
 

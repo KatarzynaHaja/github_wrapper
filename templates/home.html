@@ -2,14 +2,13 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-
-        {% if not access %}
+        {% if not accesss %}
             <div class="alert alert-danger" id='access_token_alert' role="alert">
                 Add your personal Github token . It allows you to use all functionalities.
             </div>
 
              <div style="text-align:center">
-                <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
+                <button class="btn btn-primary" id='access_token_button' style="margin:5px;padding-left:15px;padding-right:15px"
                         onclick="location.href = 'add_personal_token.html';">
                     Add your personal token
                 </button>
@@ -32,7 +31,7 @@
                         {{ item.name }}
                     </div>
                     <div>
-                        <button class="btn" onclick="location.href ='{% url 'refresh_data' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Refresh">
+                        <button class="btn"  onclick="location.href ='{% url 'refresh_data' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Refresh">
                             <i class="fas fa-sync-alt"></i>
                         </button>
 
@@ -54,7 +53,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        {% url 'signup' %}
+        {% url 'login' %}
     {% endif %}
 
     {% if is_paginated %}

@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 
 from github_api.models import GitAuthentication, Repo
 
+
 class TestAddNewRepo(LiveServerTestCase):
 
     def setUp(self):
@@ -18,8 +19,8 @@ class TestAddNewRepo(LiveServerTestCase):
 
         self.git = GitAuthentication.objects.create(access_token='05f597ccd35846a3477744e3e7428087545da48f'[::-1])
         self.git.user.add(self.user)
-        self.username= 'user2'
-        self.password='Admin#99'
+        self.username = 'user2'
+        self.password = 'Admin#99'
         self.selenium.get(self.live_server_url + '/login')
         self.selenium.find_element_by_id("id_username").send_keys(self.username)
         self.selenium.find_element_by_id("id_password").send_keys(self.password)
