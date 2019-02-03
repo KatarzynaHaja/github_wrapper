@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        {% if not accesss %}
+        {% if not access %}
             <div class="alert alert-danger" id='access_token_alert' role="alert">
                 Add your personal Github token . It allows you to use all functionalities.
             </div>
@@ -13,7 +13,6 @@
                     Add your personal token
                 </button>
             </div>
-
         {% else %}
             <div style="text-align:right">
                 <button class="btn btn-primary" style="margin:5px;padding-left:15px;padding-right:15px"
@@ -52,8 +51,6 @@
                 </li>
             {% endfor %}
         </ul>
-    {% else %}
-        {% url 'login' %}
     {% endif %}
 
     {% if is_paginated %}
