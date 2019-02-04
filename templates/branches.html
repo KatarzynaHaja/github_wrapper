@@ -1,30 +1,28 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Branches</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_modal1">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-    </div>
-
-    <h1>Add new Repoitory to observed</h1>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-    </button>
-
-{% endblock %}
+        <div class="modal-body">
+            {%  for i in branches %}
+                <div style="padding: 5px">
+                {{ i.name}}
+                </div>
+            {% endfor %}
+            <hr style="padding-left: 0; padding-right: 0 !important">
+            <button type="button" class="btn btn-secondary" style="float: right" data-dismiss="modal" aria-label="Close" id="close_modal2"> Close
+            </button>
+        </div><!-- /.modal-body -->
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    $(function () {
+        $("#close_modal1, #close_modal2").on('click', function () {
+            $('.modal').toggle();
+            $('.modal-backdrop').toggle();
+        });
+    })
+</script>

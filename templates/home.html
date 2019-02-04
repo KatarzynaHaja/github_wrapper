@@ -1,14 +1,21 @@
 {% extends 'base.html' %}
 
+{% block extra_js %}
+{% endblock %}
+
+
 {% block content %}
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    </div><!-- /.modal -->
     {% if user.is_authenticated %}
         {% if not access %}
             <div class="alert alert-danger" id='access_token_alert' role="alert">
                 Add your personal Github token . It allows you to use all functionalities.
             </div>
 
-             <div style="text-align:center">
-                <button class="btn btn-primary" id='access_token_button' style="margin:5px;padding-left:15px;padding-right:15px"
+            <div style="text-align:center">
+                <button class="btn btn-primary" id='access_token_button'
+                        style="margin:5px;padding-left:15px;padding-right:15px"
                         onclick="location.href = 'add_personal_token.html';">
                     Add your personal token
                 </button>
@@ -30,7 +37,8 @@
                         {{ item.name }}
                     </div>
                     <div>
-                        <button class="btn"  onclick="location.href ='{% url 'refresh_data' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Refresh">
+                        <button class="btn" onclick="location.href ='{% url 'refresh_data' item.pk %}'"
+                                data-toggle="tooltip" data-placement="bottom" title="Refresh">
                             <i class="fas fa-sync-alt"></i>
                         </button>
 
@@ -38,14 +46,17 @@
                                 data-toggle="tooltip" data-placement="bottom" title="New issue">
                             <i class="far fa-plus-square"></i>
                         </button>
-
-                        <button class="btn" data-toggle="tooltip" data-placement="bottom" title="Branches">
+                        <a class="btn open_modal" data-toggle="modal" data-url='{% url 'branches' pk=item.pk %}'
+                                data-target="#modal">
                             <i class="fas fa-code-branch"></i>
-                        </button>
+                        </a>
 
-                        <button class="btn" onclick="location.href ='{% url 'remove_repo' pk=item.pk %}'" data-toggle="tooltip" data-placement="bottom" title="Remove">
+
+                        <button class="btn" onclick="location.href ='{% url 'remove_repo' pk=item.pk %}'"
+                                data-toggle="tooltip" data-placement="bottom" title="Remove">
                             <i class="fas fa-trash-alt"></i>
                         </button>
+
                     </div>
 
                 </li>
@@ -75,6 +86,19 @@
         </ul>
     {% endif %}
 
-
-
+    <script>
+    $(function () {
+        let my_modal = $("#modal");
+        $('.open_modal').on('click', function (event) {
+            $('#modal').toggle();
+            $(".modal-backdrop").toggle();
+            $.ajax({
+                url: $(this).attr("data-url"),
+                success: function (data) {
+                    my_modal.html(data)
+                }
+            })
+        })
+    });
+    </script>
 {% endblock %}

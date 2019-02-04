@@ -1,29 +1,40 @@
-
-
-{% extends 'base.html' %}
-
-{% block content %}
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{ issue.title }}
-                    {{ issue.body }}
-                </div>
-            </div>
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Issue detail</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_modal1">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-    </div>
-{##}
-{#    <h1>Add new repository to observed</h1>#}
-{#    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">#}
-{#        Launch demo modal#}
-{#    </button>#}
-
-{% endblock %}
+        <div class="modal-body" style="font-size: 15px">
+                <div style="padding: 10px">
+                    <span style="font-weight: bold">Title </span>: <span style="font-size: 14px">{{ issue.title }}</span>
+                </div>
+                 <div style="padding: 10px">
+                     <span style="font-weight: bold">Description </span>: <span style="font-size: 14px">{{ issue.body }}</span>
+                 </div>
+                 <div style="padding: 10px">
+                     <span style="font-weight: bold">Label </span>: <span style="font-size: 14px">{{ issue.label }}</span>
+                </div>
+                 <div style="padding: 10px">
+                     <span style="font-weight: bold">Milestone</span>: <span style="font-size: 14px">{{ issue.milestone }}</span>
+                </div>
+                {% if issue.assignee %}
+                 <div style="padding: 10px">
+                     <span style="font-weight: bold">Assignee</span>: <a href = 'https://github.com/{{ issue.assignee}}'>{{ issue.assignee }}</a>
+                </div>
+                {%  endif %}
+            <hr style="padding-left: 0; padding-right: 0 !important">
+            <button type="button" class="btn btn-secondary" style="float: right" data-dismiss="modal" aria-label="Close" id="close_modal2"> Close
+            </button>
+        </div><!-- /.modal-body -->
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+<script>
+    $(function () {
+        $("#close_modal1, #close_modal2").on('click', function () {
+            $('.modal').toggle();
+            $('.modal-backdrop').toggle();
+        });
+    })
+</script>

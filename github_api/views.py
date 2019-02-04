@@ -96,6 +96,11 @@ def update_personal_token(request):
     return render(request, 'update_token.html', {'form': form, 'message': message})
 
 
+def branches(request, pk):
+    repo = get_object_or_404(Repo, pk=pk)
+    branches = Branch.objects.filter(repo=repo).all()
+    return render(request, 'branches.html', {'branches': branches})
+
 @login_required
 def scrum_board(request, pk):
     repo = get_object_or_404(Repo, pk=pk)
@@ -195,6 +200,7 @@ def add_issue(i, repo):
     new_issue.body = i['body']
     new_issue.label = i['label']
     new_issue.milestone = i['milestone']
+    new_issue.assignee = i['assignee'].login if i['assignee'] is not None else None
     new_issue.number = i['number']
     new_issue.repo = repo
     new_issue.save()

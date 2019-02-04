@@ -27,9 +27,10 @@ body {
   margin: 10px;
   position: relative;
   overflow: hidden;
-  height: 40px;
+  {#height: 40px;#}
   box-shadow: 3px 3px 3px rgba(0, 0, 0, .1);
   z-index: 2;
+    word-wrap: break-word;
 }
 .card:before {
   content: "";
@@ -40,7 +41,9 @@ body {
 
 .card h5 {
   font-size: 13px;
-  line-height: 50px;
+    padding-top:10px;
+    padding-bottom:10px;
+  {#line-height: 50px;#}
   padding-left: 10px;
   font-weight: 300;
 }
@@ -109,32 +112,44 @@ body {
 {% endblock %}
 
 {% block content1 %}
+     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    </div><!-- /.modal -->
     <h2 style="text-align: center; padding:20px"> Scrum board</h2>
-    <div class="row" style="padding:10px">
+    <div style="display:flex; overflow: auto;">
+    <div style="padding:10px; display: flex;">
+
 
       {% for key, issue in issues.items %}
-          <div class="col-sm p-0" style="border-left:1px solid black;">
+          <span class="p-0 col-sm" style="border-left:1px solid black;min-width: 200px!important; max-with:400px;width:20px">
             <div class="clear">
                 {{ key }}
             </div>
           {%  for i in issue %}
-              <div class="card" onclick="location.href ='{% url 'issue_details' id=i.id %}'"  data-task-id="{{i.id}}">
-                <h5>{{i.title}}</h5>
-                  <a href="#"
-                        class="issue-link"
-                        data-toggle="modal"
-                        data-target="#issue-modal"
-                        data-img="{{ building.img.url }}"
-                        data-description="{{ building.short_description }}"
-                        data-name="{{ building.name }}">
-                        {{ building.name }}
-</a>
-{#                <div class="card-details">#}
-{#                  <p data-field="description">{{i.body}}</p>#}
-{#                </div>#}
+              <div class="card open_modal" data-toggle="modal" data-url='{% url 'issue_details' id=i.id %}'
+                                data-target="#modal">
+                <h5 style="word-wrap:break-word">{{i.title}}</h5>
+
               </div>
-              {% endfor %}
-          </div>
+                  {% endfor %}
+          </span>
       {% endfor %}
     </div>
+    </div>
+
+
+       <script>
+    $(function () {
+        let my_modal = $("#modal");
+        $('.open_modal').on('click', function (event) {
+            $('#modal').toggle();
+            $(".modal-backdrop").toggle();
+            $.ajax({
+                url: $(this).attr("data-url"),
+                success: function (data) {overflow: auto;
+                    my_modal.html(data)
+                }
+            })
+        })
+    });
+    </script>
 {% endblock %}

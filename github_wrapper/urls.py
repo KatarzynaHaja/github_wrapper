@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'add_personal_token', views.add_personal_token , name='add_personal_token'),
     url(r'refresh_data/(?P<pk>\d+)/', views.refresh_data, name='refresh_data'),
     url(r'remove_repo/(?P<pk>\d+)/', views.remove_repo, name='remove_repo'),
-    url(r'update_token', views.update_personal_token, name='update_token')
+    url(r'update_token', views.update_personal_token, name='update_token'),
+    url(r'branches/(?P<pk>\d+)/', views.branches, name='branches')
 
 ]
