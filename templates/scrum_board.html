@@ -55,11 +55,11 @@
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     </div><!-- /.modal -->
     <h2 style="text-align: center; padding:20px"> Scrum board</h2>
-    <div style="padding:10px; display: flex; overflow: auto;">
+    <div style="padding:10px; display: flex; overflow: auto; min-height: 200px!important;">
 
 
         {% for key, issue in issues.items %}
-            <span class="p-0 col-sm" style="border-left:1px solid black;min-width: 200px!important;">
+            <span class="p-0 col-sm" style="border-left:1px solid black;min-width: 250px!important;">
             <div class="clear">
                 {{ key }}
             </div>
