@@ -145,7 +145,7 @@ body {
             $(".modal-backdrop").toggle();
             $.ajax({
                 url: $(this).attr("data-url"),
-                success: function (data) {overflow: auto;
+                success: function (data) {
                     my_modal.html(data)
                 }
             })
