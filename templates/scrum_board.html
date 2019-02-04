@@ -6,150 +6,88 @@
 {% block my_styles %}
 
     <style>
-    .mt-2.container.p-2 {display:none}
+        .mt-2.container.p-2 {
+            display: none
+        }
 
 
-body {
-  font-weight: 300;
-  font-family: Arial;
-  font-size: 20px;
-}
+        body {
+            font-weight: 300;
+            font-family: Arial;
+            font-size: 20px;
+        }
 
-.clear {
-    padding : 10px;
-    text-align:center;
-    border-bottom:1px solid black;
-}
+        .clear {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid black;
+        }
 
-.card {
-  background-color: lightgrey;
-  min-height: 50px;
-  margin: 10px;
-  position: relative;
-  overflow: hidden;
-  {#height: 40px;#}
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, .1);
-  z-index: 2;
-    word-wrap: break-word;
-}
-.card:before {
-  content: "";
-  position: absolute;
-  height: 100%;
-  width: 1px;
-}
+        .card {
+            background-color: lightgrey;
+            min-height: 50px;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 3px 3px 3px rgba(0, 0, 0, .1);
+            z-index: 2;
+            word-wrap: break-word;
+        }
 
-.card h5 {
-  font-size: 13px;
-    padding-top:10px;
-    padding-bottom:10px;
-  {#line-height: 50px;#}
-  padding-left: 10px;
-  font-weight: 300;
-}
-.card.edit-mode h5 {
-  position: relative;
-}
-.card.edit-mode h5:after {
-  top: 50%;
-  margin-left: 5px;
-  margin-top: 1px;
-  transform: translateY(-50%);
-  position: absolute;
-  font-size: 9px;
-  content: "(Edit Mode Enabled)";
-}
+        .card:before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 1px;
+        }
 
-.card.expanded {
-  overflow: auto !important;
-  height: auto !important;
-}
-.card-details {
-  padding: 10px;
-  font-size: 12px;
-  word-wrap: break-word;
-  padding-top: 0;
-}
-.card-details p {
-  margin-bottom: 10px;
-  position: relative;
-}
-.card-details p:before {
-  position: absolute;
-  left: 0;
-}
-.card-details p:nth-child(1) {
-  padding-left: 67px;
-}
-.card-details p:nth-child(1):before {
-  content: "Description : ";
-}
-.card-details p:nth-child(2) {
-  padding-left: 72px;
-}
-.card-details p:nth-child(2):before {
-  content: "Remote URL : ";
-}
-.card-details p:nth-child(3) {
-  padding-left: 70px;
-}
-.card-details p:nth-child(3):before {
-  content: "Assigned To : ";
-}
-.card-details a {
-  border-bottom: 1px dotted #fff;
-}
-.card-details a:hover {
-  border-bottom-style: solid;
-}
-.dragged-over {
-  background-color: rgba(0, 0, 0, .1);
-}
-
-
-
+        .card h5 {
+            font-size: 13px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 10px;
+            font-weight: 300;
+        }
     </style>
 {% endblock %}
 
 {% block content1 %}
-     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     </div><!-- /.modal -->
     <h2 style="text-align: center; padding:20px"> Scrum board</h2>
-    <div style="display:flex; overflow: auto;">
-    <div style="padding:10px; display: flex;">
+    <div style="padding:10px; display: flex; overflow: auto;">
 
 
-      {% for key, issue in issues.items %}
-          <span class="p-0 col-sm" style="border-left:1px solid black;min-width: 200px!important; max-with:400px;width:20px">
+        {% for key, issue in issues.items %}
+            <span class="p-0 col-sm" style="border-left:1px solid black;min-width: 200px!important;">
             <div class="clear">
                 {{ key }}
             </div>
-          {%  for i in issue %}
-              <div class="card open_modal" data-toggle="modal" data-url='{% url 'issue_details' id=i.id %}'
-                                data-target="#modal">
-                <h5 style="word-wrap:break-word">{{i.title}}</h5>
+                {% for i in issue %}
+                    <div class="card open_modal" data-toggle="modal" data-url='{% url 'issue_details' id=i.id %}'
+                         data-target="#modal">
+                <h5 style="word-wrap:break-word">{{ i.title }}</h5>
 
               </div>
-                  {% endfor %}
+                {% endfor %}
           </span>
-      {% endfor %}
-    </div>
+        {% endfor %}
     </div>
 
 
-       <script>
-    $(function () {
-        let my_modal = $("#modal");
-        $('.open_modal').on('click', function (event) {
-            $('#modal').toggle();
-            $(".modal-backdrop").toggle();
-            $.ajax({
-                url: $(this).attr("data-url"),
-                success: function (data) {
-                    my_modal.html(data)
-                }
+    <script>
+        $(function () {
+            let my_modal = $("#modal");
+            $('.open_modal').on('click', function (event) {
+                $('#modal').toggle();
+                $(".modal-backdrop").toggle();
+                $.ajax({
+                    url: $(this).attr("data-url"),
+                    success: function (data) {
+                        my_modal.html(data)
+                    }
+                })
             })
-        })
-    });
+        });
     </script>
 {% endblock %}
